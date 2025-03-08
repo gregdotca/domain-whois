@@ -5,7 +5,7 @@ from time import sleep
 
 app = Flask(__name__, static_folder="assets")
 
-site_title = "Domain WHOIS Lookup"
+APP_TITLE = "Domain WHOIS Lookup"
 
 
 @app.route("/<domain>", methods=["GET"])
@@ -54,7 +54,7 @@ def process_domain(domain):
 
 def display_homepage(domain, page_body):
     return render_template(
-        "home.html", site_title=site_title, domain=domain, page_body=page_body
+        "home.html", app_title=APP_TITLE, domain=domain, page_body=page_body
     )
 
 
