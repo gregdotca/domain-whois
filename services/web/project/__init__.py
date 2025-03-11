@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import whois
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request
 from time import sleep
 
 app = Flask(__name__, static_folder="assets")
 
 APP_TITLE = "Domain WHOIS Lookup"
+DEFAULT_DOMAIN = "example.com"
 
 
 @app.route("/<domain>", methods=["GET"])
@@ -13,28 +14,15 @@ def home_domain(domain):
     return display_homepage(domain, process_domain(domain))
 
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET", "POST"])
 def home():
-    domain = "example.com"
-    page_body = process_domain(domain)
-
-    return display_homepage(domain, page_body)
-
-
-@app.route("/", methods=["POST"])
-def home_post():
-    domain = "example.com"
-
-    sleep(0.25)
-
-    submitted_domain = str(request.form["domain"])
-
-    if submitted_domain == "":
-        submitted_domain = domain
-
-    page_body = process_domain(submitted_domain)
-
-    return display_homepage(submitted_domain, page_body)
+    if request.method == "GET":
+        return redirect("/" + DEFAULT_DOMAIN)
+    else:
+        sleep(0.25)
+        submitted_domain = str(request.form["domain"])
+        submitted_domain = submitted_domain or DEFAULT_DOMAIN
+        return redirect("/" + submitted_domain)
 
 
 def process_domain(domain):
