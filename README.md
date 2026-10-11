@@ -1,5 +1,7 @@
 Domain WHOIS Lookup
 -------------------
+[![ACR B0a](https://img.shields.io/badge/ACR-B0a-2140B5)](ACR.md)
+
 ## Demo
 
 https://whois.greg.ca
@@ -8,13 +10,13 @@ https://whois.greg.ca
 
 - Clone the repository
 - Run "docker-compose up -d"
-- Load https://IP_ADDRESS:8094 in your web browser
+- Load http://IP_ADDRESS:8094 in your web browser
 
 ## License
 
 MIT License
 
-Copyright (c) 2024 Greg Chetcuti
+Copyright (c) 2024-2026 Greg Chetcuti <greg@chetcuti.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
