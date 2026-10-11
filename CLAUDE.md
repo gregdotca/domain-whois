@@ -17,11 +17,11 @@ docker compose up -d --build
 There are no tests. Linting runs inside the production Docker build, so a flake8 error fails the build. flake8 isn't in `requirements.txt`; to run the same check locally, install the version the Dockerfile pins:
 
 ```bash
-pip install flake8==3.9.1
+pip install flake8==7.4.1
 cd services/web && flake8 --ignore=E501,W503,F401 .
 ```
 
-The Dockerfile also pins the base image, `python:3.9.21-slim`.
+The Dockerfile also pins the base image, `python:3.14.8-slim`.
 
 ### Dev/prod switching
 
@@ -32,7 +32,7 @@ Because the tracked files are the production ones, run `./to-prod.sh` before com
 ## Architecture
 
 - **Routes:** `GET /<domain>` does the lookup and renders the page. `GET /` redirects to `/example.com`. `POST /` (the form) sleeps 0.25s so the loading spinner shows, then redirects to `/<submitted domain>`. Every lookup is a GET to a shareable URL.
-- **Lookup:** `process_domain()` calls `whois.whois()` from `python-whois` and turns newlines into `<BR>`. Any exception becomes a generic error message.
+- **Lookup:** `process_domain()` calls `whois.whois()` from `python-whois` and turns newlines into `<BR>`. Any exception becomes a generic error message. `python-whois` is deliberately kept at 0.8.0: 0.9.x finds WHOIS servers through the IANA registry, which lists none for `.uk`, so `.uk` lookups fail. Check `.uk` and a few other TLDs before upgrading it.
 - **Rendering:** `home.html` outputs `page_body` with `|safe`, because `process_domain()` adds the `<BR>` tags itself. The WHOIS response is untrusted, so `process_domain()` HTML-escapes it with `markupsafe.escape` first. Any new text that goes into `page_body` must be escaped the same way.
 - **Frontend:** Tailwind v4 (browser build) and daisyUI 5 come from the jsDelivr CDN (theme `bumblebee`). jQuery 3.7.1 and the favicon are served locally from `project/assets/`, which is Flask's `static_folder`.
 - **Custom headers:** `home.html` includes `templates/custom.headers` if it exists (`ignore missing`). The file is gitignored and holds deployment-specific `<head>` content.
