@@ -4,5 +4,16 @@
 
 /* daisyUI 5.7.46, from https://github.com/saadeghi/daisyui/releases */
 @plugin "./daisyui-5.7.46.mjs" {
-    themes: bumblebee --default;
+    themes: bumblebee --default, business --prefersdark;
+}
+
+/* Dark mode tweaks: a darker blue than business's primary (oklch(41.703% .099 251.473)) for
+   the Lookup button, and bumblebee's rounder corners (values from the bumblebee theme). */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --color-primary: oklch(34% .085 251.473);
+        --radius-selector: 1rem;
+        --radius-field: .5rem;
+        --radius-box: 1rem;
+    }
 }
