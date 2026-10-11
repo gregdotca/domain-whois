@@ -4,6 +4,9 @@
 
 - Validate the domain before looking it up. `process_domain()` in `services/web/project/__init__.py` passed any text from the URL to `whois.whois()`, so things like `google` or `8.8.8.8` were sent to WHOIS servers and came back as empty results. The new `is_valid_domain()` accepts domain names, including internationalized ones like `münchen.de`, and rejects malformed punycode (`xn--`) labels. Anything else gets a "Please enter a valid domain name" message without a lookup. The form also trims spaces around the submitted domain. Update `CLAUDE.md` to match.
 - Fix the Docker build's style warnings in `services/web/Dockerfile`: use `AS builder` instead of `as builder`, and `ENV KEY=value` instead of the legacy `ENV KEY value` form.
+- Pin the daisyUI and Tailwind CDN URLs in `services/web/project/templates/home.html` to exact versions (`daisyui@5.7.47` and `@tailwindcss/browser@4.3.3`, the versions `@5` and `@4` resolved to on jsDelivr today). The open-ended `@5` and `@4` URLs picked up each new release without warning, so an upstream change could alter or break the page. daisyUI's `themes.css` stays at 5.0.0, as before, so the page looks the same.
+- Fix the install step in `README.md` to use `docker compose` instead of the old `docker-compose` command.
+- Update `CLAUDE.md`: fix a grammar slip in the lookup description, note that `is_valid_domain()` rejects malformed punycode and that `whois.whois()` gets the domain as typed, note that `Dockerfile.DEV` pins the same base image and skips flake8, add the dev run command, and list the pinned CDN versions.
 - Update `ACR.md` and the README badge from B1a to B1b, and set the `updated` date. The AI agent also wrote the domain validation, which the maintainer reviewed but didn't verify line by line, so the oversight level drops from Verified to Reviewed. The AI Share stays at 1–25%.
 
 ## 2026-10-10

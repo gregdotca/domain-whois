@@ -9,7 +9,7 @@ https://whois.greg.ca
 ## Installation
 
 - Clone the repository
-- Run "docker-compose up -d"
+- Run "docker compose up -d"
 - Load http://IP_ADDRESS:8094 in your web browser
 
 ## License
