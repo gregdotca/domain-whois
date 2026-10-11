@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-11
+
+- Validate the domain before looking it up. `process_domain()` in `services/web/project/__init__.py` passed any text from the URL to `whois.whois()`, so things like `google` or `8.8.8.8` were sent to WHOIS servers and came back as empty results. The new `is_valid_domain()` accepts domain names, including internationalized ones like `münchen.de`, and rejects malformed punycode (`xn--`) labels. Anything else gets a "Please enter a valid domain name" message without a lookup. The form also trims spaces around the submitted domain. Update `CLAUDE.md` to match.
+- Fix the Docker build's style warnings in `services/web/Dockerfile`: use `AS builder` instead of `as builder`, and `ENV KEY=value` instead of the legacy `ENV KEY value` form.
+- Update `ACR.md` and the README badge from B1a to B1b, and set the `updated` date. The AI agent also wrote the domain validation, which the maintainer reviewed but didn't verify line by line, so the oversight level drops from Verified to Reviewed. The AI Share stays at 1–25%.
+
 ## 2026-10-10
 
 - Upgrade Python from 3.9.21 to 3.14.8 in `services/web/Dockerfile`, since Python 3.9 stopped getting security updates in October 2025.

@@ -3,14 +3,14 @@
 ###########
 
 # pull official base image
-FROM python:3.14.8-slim as builder
+FROM python:3.14.8-slim AS builder
 
 # set work directory
 WORKDIR /usr/src/app
 
 # set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # install system dependencies
 RUN apt-get update && \

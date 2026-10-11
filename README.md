@@ -1,6 +1,6 @@
 Domain WHOIS Lookup
 -------------------
-[![ACR B1a](https://img.shields.io/badge/ACR-B1a-2140B5)](ACR.md)
+[![ACR B1b](https://img.shields.io/badge/ACR-B1b-2140B5)](ACR.md)
 
 ## Demo
 
