@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import whois
 from flask import Flask, redirect, render_template, request
+from markupsafe import escape
 from time import sleep
 
 app = Flask(__name__, static_folder="assets")
@@ -29,7 +30,7 @@ def process_domain(domain):
     page_body = ""
 
     try:
-        domain_info = str(whois.whois(domain))
+        domain_info = str(escape(str(whois.whois(domain))))
         domain_info = domain_info.replace("\n", "<BR>")
 
         page_body += domain_info

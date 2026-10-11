@@ -33,7 +33,7 @@ Because the tracked files are the production ones, run `./to-prod.sh` before com
 
 - **Routes:** `GET /<domain>` does the lookup and renders the page. `GET /` redirects to `/example.com`. `POST /` (the form) sleeps 0.25s so the loading spinner shows, then redirects to `/<submitted domain>`. Every lookup is a GET to a shareable URL.
 - **Lookup:** `process_domain()` calls `whois.whois()` from `python-whois` and turns newlines into `<BR>`. Any exception becomes a generic error message.
-- **Rendering:** `home.html` outputs `page_body` with `|safe`, so the WHOIS server's response goes into the page as unescaped HTML. Keep this in mind when you change the lookup or the output.
+- **Rendering:** `home.html` outputs `page_body` with `|safe`, because `process_domain()` adds the `<BR>` tags itself. The WHOIS response is untrusted, so `process_domain()` HTML-escapes it with `markupsafe.escape` first. Any new text that goes into `page_body` must be escaped the same way.
 - **Frontend:** Tailwind v4 (browser build) and daisyUI 5 come from the jsDelivr CDN (theme `bumblebee`). jQuery 3.7.1 and the favicon are served locally from `project/assets/`, which is Flask's `static_folder`.
 - **Custom headers:** `home.html` includes `templates/custom.headers` if it exists (`ignore missing`). The file is gitignored and holds deployment-specific `<head>` content.
 - `manage.py` wraps the app in a `FlaskGroup` CLI. gunicorn loads `manage:app`.
