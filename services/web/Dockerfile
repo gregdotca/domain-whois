@@ -14,7 +14,7 @@ ENV PYTHONUNBUFFERED=1
 
 # install system dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc curl ca-certificates
+    apt-get install -y --no-install-recommends curl ca-certificates
 
 # install the tailwind standalone cli
 ARG TAILWIND_VERSION=v4.3.3
@@ -30,17 +30,18 @@ RUN case "$(dpkg --print-architecture)" in \
     echo "$sha  /usr/local/bin/tailwindcss" | sha256sum -c - && \
     chmod +x /usr/local/bin/tailwindcss
 
-# lint
+# lint and test
 RUN pip install --upgrade pip
-RUN pip install flake8==7.4.1
+COPY ./requirements.txt .
+RUN pip install flake8==7.4.1 pytest==9.1.1 -r requirements.txt
 COPY . .
 RUN flake8 --ignore=E501,W503,F401 .
+RUN python -m pytest -p no:cacheprovider
 
 # build css
 RUN tailwindcss -i project/styles/app.css -o project/assets/app.css --minify
 
-# install python dependencies
-COPY ./requirements.txt .
+# build python dependency wheels
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 

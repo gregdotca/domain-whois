@@ -2,6 +2,11 @@
 
 ## 2026-10-11
 
+- Pin the indirect dependencies in `services/web/requirements.txt` (blinker 1.9.0, click 8.5.0, future 1.0.0, itsdangerous 2.2.0, Jinja2 3.1.6, and MarkupSafe 3.0.4, the versions pip resolves today). Only the four direct packages were pinned, and because the Dockerfile builds wheels with `--no-deps`, the final stage fetched the rest from PyPI at whatever version was current, so a rebuild could change them without any code change. They're now built into wheels with everything else.
+- Run the tests in the production Docker build, right after flake8, in `services/web/Dockerfile`. The builder stage now installs the requirements and pytest 9.1.1, so a failing test stops the build instead of being deployed.
+- Remove `gcc` from the builder stage of `services/web/Dockerfile`. Every dependency installs from a ready-made wheel or, for python-whois, a pure-Python build, so the compiler was never used. MarkupSafe has prebuilt wheels for both x86_64 and arm64.
+- Tidy `docker-compose.yml`: drop `FLASK_ENV`, which Flask removed in 2.3, and `FLASK_APP`, which gunicorn doesn't read; run gunicorn directly instead of through `bash -c`; and remove the old `# version: '3.8'` comment. The container runs the same way.
+- Update `CLAUDE.md`: the tests now run in the Docker build, the indirect dependencies are pinned, and the local setup pins pytest.
 - Add `<!DOCTYPE html>`, `lang="en"`, and a viewport meta tag to `services/web/project/templates/home.html`. Without the doctype, browsers rendered the page in quirks mode; without `lang`, screen readers had to guess the page's language; and without the viewport tag, phones showed a zoomed-out desktop layout. The desktop view looks the same as before.
 - Remove jQuery. It was loaded only to show the loading spinner (`$('#loading').show()`), which the Lookup button now does with one line of plain JavaScript. This removes `services/web/project/assets/jquery-3.7.1.min.js` and a request on every page load.
 - Remove the final stage's `RUN apt-get update` from `services/web/Dockerfile`. It installed nothing, so it only added a layer and slowed the build. Also remove the commented-out netcat install above it.

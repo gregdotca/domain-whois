@@ -1,5 +1,3 @@
-# version: '3.8'
-# 
 services:
 
   web:
@@ -7,10 +5,7 @@ services:
     build:
       context: ./services/web
       dockerfile: Dockerfile
-    command: bash -c 'gunicorn --bind 0.0.0.0:5000 --no-control-socket manage:app'
+    command: gunicorn --bind 0.0.0.0:5000 --no-control-socket manage:app
     ports:
       - 8094:5000
     restart: unless-stopped
-    environment:
-      - FLASK_APP=project/__init__.py
-      - FLASK_ENV=production

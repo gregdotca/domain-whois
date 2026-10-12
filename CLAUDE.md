@@ -16,10 +16,10 @@ Production (the tracked `docker-compose.yml`), served by gunicorn on host port 8
 docker compose up -d --build
 ```
 
-Tests live in `services/web/tests/` and cover `is_valid_domain()` and `process_domain()`, with `whois.whois()` stubbed out so they need no network. pytest isn't in `requirements.txt` and the Docker build doesn't run the tests, so run them locally (with `python -m`, so `project` is importable). The maintainer's working copy has a gitignored `.venv` at the repository root with the requirements, pytest, and flake8 installed; in a fresh clone, create one first:
+Tests live in `services/web/tests/` and cover `is_valid_domain()` and `process_domain()`, with `whois.whois()` stubbed out so they need no network. The production Docker build runs them after flake8, so a failing test fails the build. pytest isn't in `requirements.txt`; to run the tests locally, use `python -m`, so `project` is importable. The maintainer's working copy has a gitignored `.venv` at the repository root with the requirements, pytest, and flake8 installed; in a fresh clone, create one first:
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install -r services/web/requirements.txt pytest flake8==7.4.1
+python3 -m venv .venv && .venv/bin/pip install -r services/web/requirements.txt pytest==9.1.1 flake8==7.4.1
 source .venv/bin/activate
 (cd services/web && python -m pytest)
 ```
@@ -31,7 +31,7 @@ pip install flake8==7.4.1
 (cd services/web && flake8 --ignore=E501,W503,F401 .)
 ```
 
-The Dockerfile also pins the base image, `python:3.14.8-slim`, and builds the CSS (see Frontend below). To build the CSS outside Docker, install the Tailwind standalone CLI at the version the Dockerfile pins:
+`requirements.txt` pins the indirect dependencies too (Jinja2, MarkupSafe, and so on), so rebuilds are repeatable; when upgrading a package, update any indirect pins it needs. The Dockerfile also pins the base image, `python:3.14.8-slim`, and builds the CSS (see Frontend below). To build the CSS outside Docker, install the Tailwind standalone CLI at the version the Dockerfile pins:
 
 ```bash
 (cd services/web && tailwindcss -i project/styles/app.css -o project/assets/app.css --watch)
