@@ -47,8 +47,12 @@ def process_domain(domain):
     if not is_valid_domain(domain):
         return "Please enter a valid domain name, such as example.com."
 
+    # python-whois matches IDN suffixes in Unicode, so punycode input like
+    # xn--e1afmkfd.xn--p1ai would otherwise be looked up as just the TLD
+    lookup_domain = domain.encode("idna").decode("idna")
+
     try:
-        domain_info = str(escape(str(whois.whois(domain))))
+        domain_info = str(escape(str(whois.whois(lookup_domain))))
         domain_info = domain_info.replace("\n", "<BR>")
 
         page_body += domain_info
