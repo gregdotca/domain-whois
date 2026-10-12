@@ -27,6 +27,12 @@ def home():
         sleep(0.25)
         submitted_domain = str(request.form["domain"]).strip()
         submitted_domain = submitted_domain or DEFAULT_DOMAIN
+        # only redirect to valid domains, so input like /evil.com can't
+        # become a redirect to another site (//evil.com)
+        if not is_valid_domain(submitted_domain):
+            return display_homepage(
+                submitted_domain, process_domain(submitted_domain)
+            )
         return redirect("/" + submitted_domain)
 
 
