@@ -2,6 +2,7 @@
 
 ## 2026-10-11
 
+- Fix `services/web/manage.py` so its CLI finds the app without the `FLASK_APP` environment variable. It called `FlaskGroup(app)`, but `FlaskGroup`'s first parameter is `add_default_commands`, not the app, so `python manage.py run` failed with "Could not locate a Flask application" unless `FLASK_APP` was set. That made `CLAUDE.md`'s dev run command wrong when used with the local `.venv`. It now passes `create_app=lambda: app`. gunicorn loads `manage:app` directly, so production is unaffected. Update `CLAUDE.md` to match.
 - Pin the indirect dependencies in `services/web/requirements.txt` (blinker 1.9.0, click 8.5.0, future 1.0.0, itsdangerous 2.2.0, Jinja2 3.1.6, and MarkupSafe 3.0.4, the versions pip resolves today). Only the four direct packages were pinned, and because the Dockerfile builds wheels with `--no-deps`, the final stage fetched the rest from PyPI at whatever version was current, so a rebuild could change them without any code change. They're now built into wheels with everything else.
 - Run the tests in the production Docker build, right after flake8, in `services/web/Dockerfile`. The builder stage now installs the requirements and pytest 9.1.1, so a failing test stops the build instead of being deployed.
 - Remove `gcc` from the builder stage of `services/web/Dockerfile`. Every dependency installs from a ready-made wheel or, for python-whois, a pure-Python build, so the compiler was never used. MarkupSafe has prebuilt wheels for both x86_64 and arm64.
