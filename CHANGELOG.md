@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-12
+
+- Add Dependabot version updates in a new `.github/dependabot.yml`. Dependabot alerts and security fix PRs (set in the GitHub repo's settings, not in this file) only cover known vulnerabilities; nothing kept the pinned packages or the Python base image current otherwise. Dependabot now checks `services/web/requirements.txt` (including its pinned indirect dependencies) and the Python base image in `services/web/Dockerfile` once a month, with all pip updates, the indirect pins included, grouped into one PR. python-whois 0.9 and later are ignored, since 0.9.x breaks `.uk` lookups (see `CLAUDE.md`) and the tests stub out WHOIS, so a PR for it would pass the build and only fail on the live site; 0.8.x releases are still proposed, and a security alert still shows even for a fix only in 0.9+. `CLAUDE.md` now says to remove the rule when upgrading. It only proposes versions that have been out for at least 7 days, so a bad or hijacked release has time to be caught and pulled first; security fix PRs aren't delayed. The versions pinned inside the `Dockerfile`'s build steps (flake8, pytest, and the Tailwind CLI) aren't covered and still need updating by hand. GitHub Actions isn't included because the repo has no workflows.
+
 ## 2026-10-11
 
 - Fix an open redirect in the lookup form. `home()` in `services/web/project/__init__.py` redirected to `"/" + <submitted domain>` without checking it, so submitting `/evil.com` sent the visitor to `//evil.com`, which browsers treat as another site. The form has no CSRF protection, so any website could post to it and use whois.greg.ca to bounce visitors elsewhere. Input with `/`, `?`, or `#` also produced broken URLs. The form now redirects only to domains `is_valid_domain()` accepts; anything else renders the page directly with the "Please enter a valid domain name" message, keeping the input in the field. Valid domains, blank input, and IDNs redirect as before.

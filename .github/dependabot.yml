@@ -1,0 +1,22 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /services/web
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    groups:
+      pip:
+        patterns: ["*"]
+    ignore:
+      # 0.9.x finds WHOIS servers through the IANA registry, which lists
+      # none for .uk, so .uk lookups fail; see CLAUDE.md
+      - dependency-name: python-whois
+        versions: [">=0.9"]
+  - package-ecosystem: docker
+    directory: /services/web
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
