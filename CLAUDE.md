@@ -10,7 +10,7 @@ A single-page Flask app that runs a WHOIS lookup on a domain and shows the raw r
 
 Each command block below starts from the repository root and leaves you there.
 
-Production (the tracked `docker-compose.yml`), served by gunicorn on host port 8094:
+Production (the tracked `docker-compose.yml`), served by gunicorn on host port 8094. The port binds to `${BIND_ADDRESS:-127.0.0.1}`, so it listens only on localhost unless `BIND_ADDRESS` is set in the shell or in a gitignored `.env` next to the compose file (the server sets it there; never put a real IP in the repo):
 
 ```bash
 docker compose up -d --build

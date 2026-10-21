@@ -7,5 +7,5 @@ services:
       dockerfile: Dockerfile
     command: gunicorn --bind 0.0.0.0:5000 --no-control-socket manage:app
     ports:
-      - 8094:5000
+      - ${BIND_ADDRESS:-127.0.0.1}:8094:5000
     restart: unless-stopped

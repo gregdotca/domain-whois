@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-21
+
+- Bind the published port in `docker-compose.yml` to `${BIND_ADDRESS:-127.0.0.1}` instead of every interface. With `8094:5000`, Docker listened on all of the host's addresses, including its public IP, so the app could be reached directly and skip the reverse proxy in front of it. Docker's published ports also bypass host firewall rules such as ufw's, so a firewall didn't catch this. The port now listens on 127.0.0.1 unless `BIND_ADDRESS` is set, in the shell or in a `.env` file next to `docker-compose.yml`.
+- Ignore `.env` in `.gitignore`, so a server's `BIND_ADDRESS` setting is never committed.
+- Update `README.md`: the installation steps now load `http://127.0.0.1:8094` instead of `http://IP_ADDRESS:8094`, and explain how `BIND_ADDRESS` changes the address.
+
 ## 2026-10-12
 
 - Add Dependabot version updates in a new `.github/dependabot.yml`. Dependabot alerts and security fix PRs (set in the GitHub repo's settings, not in this file) only cover known vulnerabilities; nothing kept the pinned packages or the Python base image current otherwise. Dependabot now checks `services/web/requirements.txt` (including its pinned indirect dependencies) and the Python base image in `services/web/Dockerfile` once a month, with all pip updates, the indirect pins included, grouped into one PR. python-whois 0.9 and later are ignored, since 0.9.x breaks `.uk` lookups (see `CLAUDE.md`) and the tests stub out WHOIS, so a PR for it would pass the build and only fail on the live site; 0.8.x releases are still proposed, and a security alert still shows even for a fix only in 0.9+. `CLAUDE.md` now says to remove the rule when upgrading. It only proposes versions that have been out for at least 7 days, so a bad or hijacked release has time to be caught and pulled first; security fix PRs aren't delayed. The versions pinned inside the `Dockerfile`'s build steps (flake8, pytest, and the Tailwind CLI) aren't covered and still need updating by hand. GitHub Actions isn't included because the repo has no workflows.

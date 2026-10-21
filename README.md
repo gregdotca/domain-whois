@@ -10,7 +10,9 @@ https://whois.greg.ca
 
 - Clone the repository
 - Run "docker compose up -d"
-- Load http://IP_ADDRESS:8094 in your web browser
+- Load http://127.0.0.1:8094 in your web browser
+
+The port listens on 127.0.0.1 by default, so the app is only reachable from the same machine (put a reverse proxy in front of it to serve it to others). To listen on another address, set `BIND_ADDRESS`, either in the shell or in a `.env` file next to `docker-compose.yml` (for example, `BIND_ADDRESS=0.0.0.0` for every interface).
 
 ## License
 
