@@ -6,7 +6,7 @@ updated: 2026-10-11
 
 # AI Code Rating
 
-**ACR B3b** (Maintainer: Experienced · AI Share: 51–75% · Oversight: Reviewed)
+**[ACR B3b](https://aicoderating.com/B3b/)** (Maintainer: Experienced · AI Share: 51–75% · Oversight: Reviewed)
 
 This project is rated with [AI Code Rating](https://aicoderating.com/spec/0.1/), spec version 0.1.
 
